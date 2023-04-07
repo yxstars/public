@@ -32,6 +32,7 @@
     }
     td {
       vertical-align: middle;
+      cursor: pointer;
     }
     .today {
       background-color: #ff0;
@@ -120,13 +121,17 @@
           } else if (date == today && year == new Date().getFullYear() && month == new Date().getMonth() + 1) { // 如果是今天的日期，则添加today类名
             tds += '<td class="today">' + date + '</td>';
           } else { // 否则，添加日期
-            tds += '<td>' + date + '</td>';
+            tds += '<td onclick="goToBlankPage(' + year + ',' + month + ',' + date + ')">' + date + '</td>';
           }
         }
         trs += '<tr>' + tds + '</tr>'; // 将列添加到行中
         tds = ''; // 重置列
       }
       table.innerHTML = '<thead><tr><th>日</th><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th>六</th></tr></thead><tbody>' + trs + '</tbody>'; // 更新表格内容
+    }
+    // 点击日期跳转到空白页面
+    function goToBlankPage(year, month, date) {
+      window.location.href = 'blank.html?year=' + year + '&month=' + month + '&date=' + date;
     }
   </script>
 </body>
