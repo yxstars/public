@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>日历</title>
+    <style>
+      .calendar {
+        width: 300px;
+        margin: 0 auto;
+        font-size: 16px;
+      }
+      .calendar-header {
+        text-align: center;
+        padding: 10px;
+      }
+      .calendar-header span {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        cursor: pointer;
+      }
+      .calendar-header .calendar-month-year {
+        display: inline-block;
+        width: 150px;
+      }
+      .calendar-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .calendar-table th,
+      .calendar-table td {
+        padding: 5px;
+        text-align: center;
+        border: 1px solid #ccc;
+      }
+      .calendar-table td {
+        cursor: pointer;
+      }
+      .calendar-table td.today {
+        background-color: #eee;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="calendar">
+      <div class="calendar-header">
+        <span class="prev-year">&lt;&lt;</span>
+        <span class="prev-month">&lt;</span>
+        <span class="calendar-month-year"></span>
+        <span class="next-month">&gt;</span>
+        <span class="next-year">&gt;&gt;</span>
+        <a id="date-link" href=""></a>
+      </div>
+      <table class="calendar-table">
+        <thead>
+          <tr>
+            <th>日</th>
+            <th>一</th>
+            <th>二</th>
+            <th>三</th>
+            <th>四</th>
+            <th>五</th>
+            <th>六</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <script>
+      (function() {
+        var today = new Date();
+        var year = today.getFullYear();
+        var month = today.getMonth() + 1;
+        function getDaysInMonth(year, month) {
+          return new Date(year, month, 0).getDate();
+        }
+        function getFirstDayOfWeek(year, month) {
+          return new Date(year, month - 1, 1).getDay();
+        }
+        function renderCalendar(year, month) {
+          var daysInMonth = getDaysInMonth(year, month);
+          var firstDayOfWeek = getFirstDayOfWeek(year, month);
+          var calendarMonthYear = document.querySelector('.calendar-month-year');
+          var tbody = document.querySelector('.calendar-table tbody');
+          calendarMonthYear.innerHTML = year + '年' + month + '月';
+          tbody.innerHTML = '';
+          for (var i = 0; i < 6; i++) {
+            var tr = document.createElement('tr');
+            for (var j = 0; j < 7; j++) {
+              var td = document.createElement('td');
+              var dayOfMonth = i * 7 + j - firstDayOfWeek + 1;
+              if (dayOfMonth >= 1 && dayOfMonth <= daysInMonth) {
+                td.innerText = dayOfMonth;
+                if (year === today.getFullYear() && month === today.getMonth() + 1 && dayOfMonth === today.getDate()) {
+                  td.classList.add('today');
+                }
+                var link = document.querySelector('#date-link');
+                var dateString = year + '-' + (month < 10 ? '0' + month : month) + '-' + (dayOfMonth < 10 ? '0' + dayOfMonth : dayOfMonth);
+                td.addEventListener('click', function(dateString) {
+                  return function() {
+                    link.href = 'about:blank';
+                    link.target = '_blank';
+                    link.click();
+                  }
+                }(dateString));
+              }
+              tr.appendChild(td);
+            }
+            tbody.appendChild(tr);
+          }
+        }
+        var prevYear = document.querySelector('.prev-year');
+        var prevMonth = document.querySelector('.prev-month');
+        var nextMonth = document.querySelector('.next-month');
+        var nextYear = document.querySelector('.next-year');
+        prevMonth.addEventListener('click', function() {
+          month--;
+          if (month === 0) {
+            month = 12;
+            year--;
+          }
+          renderCalendar(year, month);
+        });
+        nextMonth.addEventListener('click', function() {
+          month++;
+          if (month === 13) {
+            month = 1;
+            year++;
+          }
+          renderCalendar(year, month);
+        });
+        prevYear.addEventListener('click', function() {
+          year--;
+          renderCalendar(year, month);
+        });
+        nextYear.addEventListener('click', function() {
+          year++;
+          renderCalendar(year, month);
+        });
+        renderCalendar(year, month);
+      })();
+    </script>
+  </body>
+</html>
