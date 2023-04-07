@@ -54,10 +54,16 @@
     .btn:hover {
       background-color: #ccc;
     }
+    .year-month {
+      margin-top: 20px;
+      font-size: 24px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
   <h1>万年历</h1>
+  <div class="year-month"></div>
   <table>
     <thead>
       <tr>
@@ -84,6 +90,7 @@
     var table = document.querySelector('table'); // 获取表格元素
     var prev = document.querySelector('#prev'); // 获取上个月按钮
     var next = document.querySelector('#next'); // 获取下个月按钮
+    var yearMonth = document.querySelector('.year-month'); // 获取年月显示元素
     // 初始化表格
     renderCalendar(year, month);
     // 上个月按钮点击事件
@@ -112,6 +119,7 @@
       var lastDate = new Date(year, month, 0).getDate(); // 获取当月的最后一天是几号
       var trs = ''; // 存储表格的行
       var tds = ''; // 存储表格的列
+      yearMonth.innerHTML = year + '年' + month + '月'; // 更新年月显示
       // 循环生成表格
       for (var i = 0; i < 6; i++) {
         for (var j = 0; j < 7; j++) {
@@ -129,9 +137,9 @@
       }
       table.innerHTML = '<thead><tr><th>日</th><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th>六</th></tr></thead><tbody>' + trs + '</tbody>'; // 更新表格内容
     }
-    // 点击日期跳转到空白页面
+    // 跳转到空白页面
     function goToBlankPage(year, month, date) {
-      window.location.href = 'blank.html?year=' + year + '&month=' + month + '&date=' + date;
+      window.open('about:blank?year=' + year + '&month=' + month + '&date=' + date, '_blank');
     }
   </script>
 </body>
