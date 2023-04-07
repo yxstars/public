@@ -1,146 +1,133 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>日历</title>
-    <style>
-      .calendar {
-        width: 300px;
-        margin: 0 auto;
-        font-size: 16px;
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>万年历</title>
+  <style>
+    body {
+      font-family: "微软雅黑";
+      text-align: center;
+      background-color: #f2f2f2;
+    }
+    h1 {
+      font-size: 36px;
+      margin-top: 50px;
+    }
+    table {
+      margin-top: 30px;
+      margin-bottom: 50px;
+      border-collapse: collapse;
+      border: 2px solid #ccc;
+      width: 70%;
+      margin: 0 auto;
+    }
+    th,
+    td {
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+    th {
+      background-color: #eee;
+      font-weight: bold;
+    }
+    td {
+      vertical-align: middle;
+    }
+    .today {
+      background-color: #ff0;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px;
+      margin-top: 20px;
+      margin-right: 20px;
+      background-color: #f5f5f5;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      text-decoration: none;
+      color: #333;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h1>万年历</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>日</th>
+        <th>一</th>
+        <th>二</th>
+        <th>三</th>
+        <th>四</th>
+        <th>五</th>
+        <th>六</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- 以下为代码原来的表格部分，不做修改 -->
+    </tbody>
+  </table>
+  <a href="#" class="btn" id="prev">上个月</a>
+  <a href="#" class="btn" id="next">下个月</a>
+  <script>
+    var date = new Date(); // 获取当前日期
+    var year = date.getFullYear(); // 获取当前年份
+    var month = date.getMonth() + 1; // 获取当前月份
+    var today = date.getDate(); // 获取当前日期
+    var table = document.querySelector('table'); // 获取表格元素
+    var prev = document.querySelector('#prev'); // 获取上个月按钮
+    var next = document.querySelector('#next'); // 获取下个月按钮
+    // 初始化表格
+    renderCalendar(year, month);
+    // 上个月按钮点击事件
+    prev.onclick = function () {
+      if (month == 1) { // 如果当前是1月，则上一个月是12月，年份减1
+        year--;
+        month = 12;
+      } else { // 否则，月份减1
+        month--;
       }
-      .calendar-header {
-        text-align: center;
-        padding: 10px;
+      renderCalendar(year, month); // 重新渲染表格
+    };
+    // 下个月按钮点击事件
+    next.onclick = function () {
+      if (month == 12) { // 如果当前是12月，则下一个月是1月，年份加1
+        year++;
+        month = 1;
+      } else { // 否则，月份加1
+        month++;
       }
-      .calendar-header span {
-        display: inline-block;
-        width: 30px;
-        height: 30px;
-        line-height: 30px;
-        text-align: center;
-        cursor: pointer;
-      }
-      .calendar-header .calendar-month-year {
-        display: inline-block;
-        width: 150px;
-      }
-      .calendar-table {
-        width: 100%;
-        border-collapse: collapse;
-      }
-      .calendar-table th,
-      .calendar-table td {
-        padding: 5px;
-        text-align: center;
-        border: 1px solid #ccc;
-      }
-      .calendar-table td {
-        cursor: pointer;
-      }
-      .calendar-table td.today {
-        background-color: #eee;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="calendar">
-      <div class="calendar-header">
-        <span class="prev-year">&lt;&lt;</span>
-        <span class="prev-month">&lt;</span>
-        <span class="calendar-month-year"></span>
-        <span class="next-month">&gt;</span>
-        <span class="next-year">&gt;&gt;</span>
-        <a id="date-link" href=""></a>
-      </div>
-      <table class="calendar-table">
-        <thead>
-          <tr>
-            <th>日</th>
-            <th>一</th>
-            <th>二</th>
-            <th>三</th>
-            <th>四</th>
-            <th>五</th>
-            <th>六</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-    <script>
-      (function() {
-        var today = new Date();
-        var year = today.getFullYear();
-        var month = today.getMonth() + 1;
-        function getDaysInMonth(year, month) {
-          return new Date(year, month, 0).getDate();
-        }
-        function getFirstDayOfWeek(year, month) {
-          return new Date(year, month - 1, 1).getDay();
-        }
-        function renderCalendar(year, month) {
-          var daysInMonth = getDaysInMonth(year, month);
-          var firstDayOfWeek = getFirstDayOfWeek(year, month);
-          var calendarMonthYear = document.querySelector('.calendar-month-year');
-          var tbody = document.querySelector('.calendar-table tbody');
-          calendarMonthYear.innerHTML = year + '年' + month + '月';
-          tbody.innerHTML = '';
-          for (var i = 0; i < 6; i++) {
-            var tr = document.createElement('tr');
-            for (var j = 0; j < 7; j++) {
-              var td = document.createElement('td');
-              var dayOfMonth = i * 7 + j - firstDayOfWeek + 1;
-              if (dayOfMonth >= 1 && dayOfMonth <= daysInMonth) {
-                td.innerText = dayOfMonth;
-                if (year === today.getFullYear() && month === today.getMonth() + 1 && dayOfMonth === today.getDate()) {
-                  td.classList.add('today');
-                }
-                var link = document.querySelector('#date-link');
-                var dateString = year + '-' + (month < 10 ? '0' + month : month) + '-' + (dayOfMonth < 10 ? '0' + dayOfMonth : dayOfMonth);
-                td.addEventListener('click', function(dateString) {
-                  return function() {
-                    link.href = 'about:blank';
-                    link.target = '_blank';
-                    link.click();
-                  }
-                }(dateString));
-              }
-              tr.appendChild(td);
-            }
-            tbody.appendChild(tr);
+      renderCalendar(year, month); // 重新渲染表格
+    };
+    // 渲染表格
+    function renderCalendar(year, month) {
+      var firstDay = new Date(year, month - 1, 1).getDay(); // 获取当月的第一天是星期几
+      var lastDate = new Date(year, month, 0).getDate(); // 获取当月的最后一天是几号
+      var trs = ''; // 存储表格的行
+      var tds = ''; // 存储表格的列
+      // 循环生成表格
+      for (var i = 0; i < 6; i++) {
+        for (var j = 0; j < 7; j++) {
+          var date = i * 7 + j - firstDay + 1; // 计算日期
+          if (date <= 0 || date > lastDate) { // 如果不是当前月的日期，则填充空白
+            tds += '<td></td>';
+          } else if (date == today && year == new Date().getFullYear() && month == new Date().getMonth() + 1) { // 如果是今天的日期，则添加today类名
+            tds += '<td class="today">' + date + '</td>';
+          } else { // 否则，添加日期
+            tds += '<td>' + date + '</td>';
           }
         }
-        var prevYear = document.querySelector('.prev-year');
-        var prevMonth = document.querySelector('.prev-month');
-        var nextMonth = document.querySelector('.next-month');
-        var nextYear = document.querySelector('.next-year');
-        prevMonth.addEventListener('click', function() {
-          month--;
-          if (month === 0) {
-            month = 12;
-            year--;
-          }
-          renderCalendar(year, month);
-        });
-        nextMonth.addEventListener('click', function() {
-          month++;
-          if (month === 13) {
-            month = 1;
-            year++;
-          }
-          renderCalendar(year, month);
-        });
-        prevYear.addEventListener('click', function() {
-          year--;
-          renderCalendar(year, month);
-        });
-        nextYear.addEventListener('click', function() {
-          year++;
-          renderCalendar(year, month);
-        });
-        renderCalendar(year, month);
-      })();
-    </script>
-  </body>
+        trs += '<tr>' + tds + '</tr>'; // 将列添加到行中
+        tds = ''; // 重置列
+      }
+      table.innerHTML = '<thead><tr><th>日</th><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th>六</th></tr></thead><tbody>' + trs + '</tbody>'; // 更新表格内容
+    }
+  </script>
+</body>
 </html>
